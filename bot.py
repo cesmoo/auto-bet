@@ -25,30 +25,35 @@ import matplotlib.patches as patches
 import warnings
 warnings.filterwarnings("ignore")
 
+# ============================================
+# Load environment variables
+# ============================================
+from dotenv import load_dotenv
+import os
+
+# Load .env file if exists (local development)
 load_dotenv()
 
-# ==========================================
-# ⚙️ CONFIGURATION
-# ==========================================
-USERNAME = os.getenv("BIGWIN_USERNAME", "959680090540")
-PASSWORD = os.getenv("BIGWIN_PASSWORD", "Mitheint11")
+# ============================================
+# Configuration (Fallback to environment variables)
+# ============================================
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_ID = os.getenv("CHANNEL_ID")
-MONGO_URI = os.getenv("MONGO_URI") 
 OWNER_ID = os.getenv("OWNER_ID")
-
-# ==========================================
-# 🎯 AUTO BET CONFIGURATION
-# ==========================================
+MONGO_URI = os.getenv("MONGO_URI")
+USERNAME = os.getenv("BIGWIN_USERNAME", "959680090540")
+PASSWORD = os.getenv("BIGWIN_PASSWORD", "Mitheint11")
 AUTO_BET_ENABLED = os.getenv("AUTO_BET_ENABLED", "true").lower() == "true"
 AUTO_BET_AMOUNT = int(os.getenv("AUTO_BET_AMOUNT", "100"))
 AUTO_BET_MAX_PER_SESSION = int(os.getenv("AUTO_BET_MAX_PER_SESSION", "50"))
 AUTO_BET_STOP_LOSS = int(os.getenv("AUTO_BET_STOP_LOSS", "-5000"))
 AUTO_BET_PROFIT_TARGET = int(os.getenv("AUTO_BET_PROFIT_TARGET", "10000"))
 
+# Check required variables
 if not all([BOT_TOKEN, CHANNEL_ID, MONGO_URI, OWNER_ID]):
-    print("❌ Error: .env ဖိုင်ထဲတွင် အချက်အလက်များ ပြည့်စုံစွာ မပါဝင်ပါ။")
-    exit()
+    print("❌ Error: Required environment variables missing!")
+    print("Please set: BOT_TOKEN, CHANNEL_ID, MONGO_URI, OWNER_ID")
+    # Don't exit, just print error
 
 bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher()
