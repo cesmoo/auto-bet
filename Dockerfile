@@ -1,28 +1,22 @@
 # ============================================
-# Dockerfile for BigWin AutoBet Bot
+# Dockerfile for BigWin AutoBet Bot (Fixed)
 # ============================================
 
-# Base image with Python 3.11
 FROM python:3.11-slim
 
-# Set working directory
 WORKDIR /app
 
 # ============================================
-# Install system dependencies for matplotlib & aiohttp
+# Install system dependencies
 # ============================================
 RUN apt-get update && apt-get install -y \
-    # For matplotlib
     libfreetype6-dev \
     libpng-dev \
     libjpeg-dev \
-    # For fonts
     fonts-liberation \
     fonts-dejavu-core \
-    # For aiohttp
     libssl-dev \
     libffi-dev \
-    # General utilities
     curl \
     wget \
     gnupg \
@@ -30,12 +24,12 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # ============================================
-# Install matplotlib fonts
+# Cache fonts
 # ============================================
 RUN fc-cache -fv
 
 # ============================================
-# Copy requirements first (for better caching)
+# Copy requirements first (for caching)
 # ============================================
 COPY requirements.txt .
 
@@ -45,29 +39,24 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # ============================================
-# Copy application code
+# Copy application code (ONLY ONCE)
 # ============================================
 COPY bot.py .
 
 # ============================================
-# Copy .env file (if exists)
-# ============================================
-COPY .env .env
-
-# ============================================
-# Create directories for logs and data
+# Create directories
 # ============================================
 RUN mkdir -p /app/logs /app/data
 
 # ============================================
-# Environment variables
+# Environment variables (use build args)
 # ============================================
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONIOENCODING=utf-8
 ENV TZ=Asia/Yangon
 
 # ============================================
-# Expose port (if needed for health check)
+# Expose port
 # ============================================
 EXPOSE 3000
 
