@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  bigwin-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bigwin-auto-bet-bot
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Yangon
+      - PYTHONUNBUFFERED=1
+      # Telegram
+      - BOT_TOKEN=${BOT_TOKEN}
+      - CHANNEL_ID=${CHANNEL_ID}
+      - OWNER_ID=${OWNER_ID}
+      # MongoDB
+      - MONGO_URI=${MONGO_URI}
+      # Website Login
+      - BIGWIN_USERNAME=${BIGWIN_USERNAME}
+      - BIGWIN_PASSWORD=${BIGWIN_PASSWORD}
+      # Auto Bet
+      - AUTO_BET_ENABLED=${AUTO_BET_ENABLED:-true}
+      - AUTO_BET_AMOUNT=${AUTO_BET_AMOUNT:-100}
+      - AUTO_BET_MAX_PER_SESSION=${AUTO_BET_MAX_PER_SESSION:-50}
+      - AUTO_BET_STOP_LOSS=${AUTO_BET_STOP_LOSS:--5000}
+      - AUTO_BET_PROFIT_TARGET=${AUTO_BET_PROFIT_TARGET:-10000}
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./.env:/app/.env
+    networks:
+      - bot-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Optional: MongoDB container (if using local MongoDB)
+  mongodb:
+    image: mongo:6
+    container_name: bigwin-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=bigwin_database
+    volumes:
+      - ./mongo_data:/data/db
+    networks:
+      - bot-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  bot-network:
+    driver: bridge
