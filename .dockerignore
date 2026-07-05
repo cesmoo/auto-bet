@@ -1,3 +1,7 @@
+# ============================================
+# .dockerignore - Fixed
+# ============================================
+
 # Python
 __pycache__/
 *.py[cod]
@@ -10,7 +14,7 @@ venv/
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Environment
+# Environment (Don't copy .env)
 .env
 .env.local
 .env.*.local
@@ -42,12 +46,8 @@ Dockerfile*
 docker-compose*.yml
 .dockerignore
 
-# Python cache
-.pytest_cache/
-.coverage
-htmlcov/
-
 # Misc
 *.md
+!README.md
 *.txt
 !requirements.txt
