@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: bigwin-auto-bet-bot
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    envVars:
+      - key: TZ
+        value: Asia/Yangon
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: BOT_TOKEN
+        sync: false
+      - key: CHANNEL_ID
+        sync: false
+      - key: OWNER_ID
+        sync: false
+      - key: MONGO_URI
+        sync: false
+      - key: BIGWIN_USERNAME
+        sync: false
+      - key: BIGWIN_PASSWORD
+        sync: false
+      - key: AUTO_BET_ENABLED
+        value: true
+      - key: AUTO_BET_AMOUNT
+        value: 100
+      - key: AUTO_BET_MAX_PER_SESSION
+        value: 50
+      - key: AUTO_BET_STOP_LOSS
+        value: -5000
+      - key: AUTO_BET_PROFIT_TARGET
+        value: 10000
+    healthCheckPath: /health
+    autoDeploy: true
