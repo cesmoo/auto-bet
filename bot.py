@@ -30,7 +30,7 @@ load_dotenv()
 # ==========================================
 # ⚙️ CONFIGURATION
 # ==========================================
-USERNAME = os.getenv("BIGWIN_USERNAME", "959675323878")
+USERNAME = os.getenv("BIGWIN_USERNAME", "959680090540")
 PASSWORD = os.getenv("BIGWIN_PASSWORD", "Mitheint11")
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_ID = os.getenv("CHANNEL_ID")
